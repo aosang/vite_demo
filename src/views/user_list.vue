@@ -6,6 +6,19 @@
       :request="fetchData"
       row-key="id"
     >
+      <!-- 工具栏左侧 -->
+      <template #toolbarLeft>
+        <a-space>
+          <a-input-search
+            v-model:value="searchParams.keyword"
+            placeholder="搜索用户名、邮箱"
+            style="width: 250px"
+            @search="handleSearch"
+          />
+          <a-button type="primary" @click="handleAdd">新增用户</a-button>
+        </a-space>
+      </template>
+
       <!-- 自定义列渲染 -->
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'status'">
@@ -31,6 +44,11 @@ import ProTable from '../components/ProTable/ProTable.vue'
 import { getUserList } from '../api/user'
 
 const tableRef = ref()
+
+// 搜索参数
+const searchParams = reactive({
+  keyword: '',
+})
 
 // 列配置
 const columns = [
@@ -101,6 +119,17 @@ async function fetchData(params) {
     }
   }
 }
+
+// 搜索
+function handleSearch() {
+  tableRef.value?.refresh()
+}
+
+// 新增
+function handleAdd() {
+  console.log('新增用户')
+}
+
 </script>
 
 <style scoped>

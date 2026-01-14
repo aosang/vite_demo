@@ -2,13 +2,24 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const TableDrag = () => import('../views/table_drag.vue')
 const UserList = () => import('../views/user_list.vue')
+const FormExample = () => import('../views/form_example.vue')
+const Test = () => import('../views/test.vue')
+const Canvas = () => import('../views/canvas.vue')
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
-      redirect: '/user_list'
+      redirect: '/canvas'
+    },
+    {
+      path: '/canvas',
+      component: Canvas
+    },
+    {
+      path: '/test',
+      component: Test
     },
     {
       path: '/table_drag',
@@ -17,6 +28,10 @@ const router = createRouter({
     {
       path: '/user_list',
       component: UserList
+    },
+    {
+      path: '/form_example',
+      component: FormExample
     }
   ]
 })

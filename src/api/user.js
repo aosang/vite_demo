@@ -40,6 +40,62 @@ const mockData = [
     status: 'active',
     createdAt: '2024-01-05 12:00:00',
   },
+  {
+    id: 6,
+    name: '孙八',
+    email: 'sunba@example.com',
+    age: 29,
+    status: 'inactive',
+    createdAt: '2024-01-06 12:00:00',
+  },
+  {
+    id: 7,
+    name: '周九',
+    email: 'zhoujiu@example.com',
+    age: 33,
+    status: 'active',
+    createdAt: '2024-01-07 12:00:00',
+  },
+  {
+    id: 8,
+    name: '吴十',
+    email: 'wushi@example.com',
+    age: 35,
+    status: 'inactive',
+    createdAt: '2024-01-08 12:00:00',
+  },
+  {
+    id: 9,
+    name: '郑十一',
+    email: 'zhengshi@example.com',
+    age: 38,
+    status: 'active',
+    createdAt: '2024-01-09 12:00:00',
+  },
+  {
+    id: 10,
+    name: '王十二',
+    email: 'wangshi@example.com',
+    age: 40,
+    status: 'inactive',
+    createdAt: '2024-01-10 12:00:00',
+  },
+  {
+    id: 11,
+    name: '冯十三',
+    email: 'fengshi@example.com',
+    age: 42,
+    status: 'active',
+    createdAt: '2024-01-11 12:00:00',
+  },
+  {
+    id: 12,
+    name: '陈十四',
+    email: 'chenshi@example.com',
+    age: 44,
+    status: 'inactive',
+    createdAt: '2024-01-12 12:00:00',
+  }
 ]
 // 模拟接口
 export const getUserList = async (params) => {
@@ -48,20 +104,31 @@ export const getUserList = async (params) => {
     setTimeout(() => {
       let list = [...mockData]
 
-      // 处理排序：默认按 id 升序
+      // 1. 处理筛选 (新增逻辑)
+      if (params.status && params.status.length > 0) {
+        list = list.filter(item => params.status.includes(item.status))
+      }
+
+      // 2. 处理排序：默认按 id 升序
       const sortField = params.sortField || 'id'
       const sortOrder = params.sortOrder || 'ascend'
 
       list.sort((a, b) => {
-        const aVal = a[sortField]
-        const bVal = b[sortField]
-        if (sortOrder === 'ascend') {
-          return aVal > bVal ? 1 : -1
-        } else {
-          return aVal < bVal ? 1 : -1
+        let aVal = a[sortField]
+        let bVal = b[sortField]
+
+        if (typeof aVal === 'number' && typeof bVal === 'number') {
+          return sortOrder === 'ascend' ? aVal - bVal : bVal - aVal
         }
+
+        aVal = String(aVal)
+        bVal = String(bVal)
+        return sortOrder === 'ascend' 
+          ? aVal.localeCompare(bVal) 
+          : bVal.localeCompare(aVal)
       })
 
+      // 3. 处理分页
       const current = params.current || 1
       const pageSize = params.pageSize || 10
       const start = (current - 1) * pageSize
@@ -70,7 +137,7 @@ export const getUserList = async (params) => {
       
       resolve({
         data,
-        total: mockData.length,
+        total: list.length, // 注意这里要返回过滤后的总数
       })
     }, 500)
   })

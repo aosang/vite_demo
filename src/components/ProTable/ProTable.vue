@@ -33,7 +33,7 @@
 
           <!-- 导出 -->
           <a-tooltip title="导出">
-            <a-button>
+            <a-button @click="handleExport">
               <template #icon>
                 <ExportOutlined />
               </template>
@@ -69,6 +69,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { ReloadOutlined, SettingOutlined, ExportOutlined } from '@ant-design/icons-vue'
 import ColumnSetting from './ColumnSetting.vue'
+import { exportToExcel } from '@/utils/export'
 import { debounce } from 'lodash-es'
 
 const props = defineProps({
@@ -123,8 +124,8 @@ const total = ref(0)
 // 表格参数
 const tableParams = ref({
   current: 1,
-  pageSize: 20,
-  sorter: null,
+  pageSize: 10,
+  sorter: { field: 'id', order: 'ascend' },
   filters: {},
 })
 
@@ -294,6 +295,16 @@ const updateURL = debounce(() => {
 // 刷新
 function refresh() {
   fetchData()
+}
+
+// 导出
+function handleExport() {
+  exportToExcel(
+    processedColumns.value,
+    dataSource.value,
+    '表格数据.xlsx'
+  )
+  message.success('导出成功')
 }
 
 // 暴露方法
