@@ -5,13 +5,18 @@ const UserList = () => import('../views/user_list.vue')
 const FormExample = () => import('../views/form_example.vue')
 const Test = () => import('../views/test.vue')
 const Canvas = () => import('../views/canvas.vue')
+const ShallowRef = () => import('../views/shallowRef.vue')
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
-      redirect: '/canvas'
+      redirect: '/form_example'
+    },
+    {
+      path: '/shallowRef',
+      component: ShallowRef
     },
     {
       path: '/canvas',
