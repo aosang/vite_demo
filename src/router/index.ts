@@ -6,13 +6,28 @@ const FormExample = () => import('../views/form_example.vue')
 const Test = () => import('../views/test.vue')
 const Canvas = () => import('../views/canvas.vue')
 const ShallowRef = () => import('../views/shallowRef.vue')
+const VirtualList = () => import('../views/virtual_list.vue')
+const Kanban = () => import('../views/kanban.vue')
+const Draggable = () => import('../views/draggable.vue')
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
-      redirect: '/form_example'
+      redirect: '/draggable'
+    },
+    {
+      path: '/draggable',
+      component: Draggable
+    },
+    {
+      path: '/kanban',
+      component: Kanban
+    },
+    {
+      path: '/virtual_list',
+      component: VirtualList
     },
     {
       path: '/shallowRef',

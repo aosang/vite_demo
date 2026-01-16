@@ -1,32 +1,36 @@
 <!-- DynamicForm核心组件 -->
 <template>
-  <a-form
-    ref="formRef"
-    :model="formData"
-    :layout="schema.layout || 'vertical'"
-    v-bind="$attrs"
-  >
-    <component
-      v-for="field in visibleFields"
-      :key="field.name"
-      :is="getFieldComponent(field)"
-      :field="field"
-      :form-data="formData"
-      :disabled="getFieldDisabled(field)"
-      @update:value="handleFieldChange(field.name, $event)"
-    />
+  <div class="dynamic-form">
+    <a-form
+      ref="formRef"
+      :model="formData"
+      :layout="schema.layout || 'vertical'"
+      v-bind="$attrs"
+      class="form-content"
+    >
+      <component
+        v-for="field in visibleFields"
+        :key="field.name"
+        :is="getFieldComponent(field)"
+        :field="field"
+        :form-data="formData"
+        :disabled="getFieldDisabled(field)"
+        @update:value="handleFieldChange(field.name, $event)"
+      />
 
-    <slot name="footer" :form-data="formData" :validate="validate">
-      <a-form-item v-if="showSubmit">
-        <a-button type="primary" @click="handleSubmit" :loading="submitting">
-          {{ submitText }}
-        </a-button>
-        <a-button style="margin-left: 8px" @click="handleReset">
-          重置
-        </a-button>
-      </a-form-item>
-    </slot>
-  </a-form>
+      <slot name="footer" :form-data="formData" :validate="validate">
+        <a-form-item v-if="showSubmit">
+          <a-button type="primary" @click="handleSubmit" :loading="submitting">
+            {{ submitText }}
+          </a-button>
+          <a-button style="margin-left: 8px" @click="handleReset">
+            重置
+          </a-button>
+        </a-form-item>
+      </slot>
+    </a-form>
+  </div>
+  
 </template>
 
 <script setup>
@@ -209,3 +213,15 @@ defineExpose({
   resetFields: handleReset,
 })
 </script>
+
+<style scoped>
+.dynamic-form {
+  padding: 20px;
+  background-color: #f5f5f5;
+  box-sizing: border-box;
+}
+
+.form-content {
+  width: 100%;
+}
+</style>
