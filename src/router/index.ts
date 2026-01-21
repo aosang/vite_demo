@@ -9,13 +9,18 @@ const ShallowRef = () => import('../views/shallowRef.vue')
 const VirtualList = () => import('../views/virtual_list.vue')
 const Kanban = () => import('../views/kanban.vue')
 const Draggable = () => import('../views/draggable.vue')
+const WhiteBoard = () => import('../views/whitboard_canvas.vue')
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
-      redirect: '/draggable'
+      redirect: '/whitboard_canvas'
+    },
+    {
+      path: '/whitboard_canvas',
+      component: WhiteBoard
     },
     {
       path: '/draggable',

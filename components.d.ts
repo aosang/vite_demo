@@ -48,6 +48,7 @@ declare module 'vue' {
     VirtualListWithInfinite: typeof import('./src/components/VirtualTable/VirtualListWithInfinite.vue')['default']
     VirtualTable: typeof import('./src/components/VirtualTable/VirtualTable.vue')['default']
     VirtualTableWithInfinite: typeof import('./src/components/VirtualTable/VirtualTableWithInfinite.vue')['default']
+    WhiteBoard: typeof import('./src/components/WhiteBoard/WhiteBoard.vue')['default']
     Work: typeof import('./src/components/shawllowRef/work.vue')['default']
   }
 }
