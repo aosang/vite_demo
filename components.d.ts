@@ -31,6 +31,7 @@ declare module 'vue' {
     ATag: typeof import('ant-design-vue/es')['Tag']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
+    CanvasFilter: typeof import('./src/components/CanvasFilter/CanvasFilter.vue')['default']
     ColumnSetting: typeof import('./src/components/ProTable/ColumnSetting.vue')['default']
     Contact: typeof import('./src/components/shawllowRef/contact.vue')['default']
     DraggableList: typeof import('./src/components/DraggableList/DraggableList.vue')['default']

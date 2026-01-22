@@ -10,13 +10,23 @@ const VirtualList = () => import('../views/virtual_list.vue')
 const Kanban = () => import('../views/kanban.vue')
 const Draggable = () => import('../views/draggable.vue')
 const WhiteBoard = () => import('../views/whitboard_canvas.vue')
+const CanvasFilter = () => import('../views/canvas_filter.vue')
+const CanvasAnimation = () => import('../views/canvas.animation.vue')
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
-      redirect: '/whitboard_canvas'
+      redirect: '/canvas_animation'
+    },
+    {
+      path: '/canvas_animation',
+      component: CanvasAnimation
+    },
+    {
+      path: '/canvas_filter',
+      component: CanvasFilter
     },
     {
       path: '/whitboard_canvas',
