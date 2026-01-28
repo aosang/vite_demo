@@ -45,6 +45,7 @@ declare module 'vue' {
     ProTable: typeof import('./src/components/ProTable/ProTable.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Schema: typeof import('./src/components/Schema/Schema.vue')['default']
     VirtualList: typeof import('./src/components/VirtualTable/VirtualList.vue')['default']
     VirtualListWithInfinite: typeof import('./src/components/VirtualTable/VirtualListWithInfinite.vue')['default']
     VirtualTable: typeof import('./src/components/VirtualTable/VirtualTable.vue')['default']

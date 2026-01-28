@@ -12,13 +12,18 @@ const Draggable = () => import('../views/draggable.vue')
 const WhiteBoard = () => import('../views/whitboard_canvas.vue')
 const CanvasFilter = () => import('../views/canvas_filter.vue')
 const CanvasAnimation = () => import('../views/canvas.animation.vue')
+const Schema = () => import('../views/schema.vue')
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
-      redirect: '/canvas_animation'
+      redirect: '/schema'
+    },
+    {
+      path: '/schema',
+      component: Schema
     },
     {
       path: '/canvas_animation',
