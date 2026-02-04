@@ -19,7 +19,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/schema'
+      redirect: '/test'
+    },
+    {
+      path: '/test',
+      component: Test
     },
     {
       path: '/schema',

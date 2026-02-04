@@ -1,6 +1,6 @@
 <template>
-  <div class="form-box">
-    <div class="form-box-item">
+  <!-- <div class="form-box"> -->
+    <!-- <div class="form-box-item">
       <input 
         v-model="formData.username" 
         type="text" placeholder="用户名" 
@@ -34,7 +34,11 @@
       >
         提交表单
       </a-button>
-    </div>
+    </div> -->
+  <!-- </div> -->
+  <div class="flex-box">
+    <p class="slide">侧边栏</p>
+    <p class="content">内容栏</p>
   </div>
 </template>
 
@@ -91,5 +95,20 @@ const handleInput = () => {
 
 .form-box-item .error {
   border: 1px solid #fa5c5c;
+}
+
+.flex-box {
+  display: flex;
+}
+
+.flex-box .slide {
+  flex-basis: 200px;
+  background: skyblue;
+  flex-shrink: 0;
+}
+
+.flex-box .content {
+  flex-grow: 1;
+  background: #fa5c5c;
 }
 </style>
