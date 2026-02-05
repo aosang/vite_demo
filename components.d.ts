@@ -39,6 +39,7 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     FormField: typeof import('./src/components/DynamicForm/FormField.vue')['default']
+    Gmap: typeof import('./src/components/Gmap/Gmap.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     InfiniteScroll: typeof import('./src/components/VirtualTable/InfiniteScroll.vue')['default']
     KanbanBoard: typeof import('./src/components/DraggableList/KanbanBoard.vue')['default']
