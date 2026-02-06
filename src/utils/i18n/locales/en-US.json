@@ -1,0 +1,28 @@
+{
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "reset": "Reset",
+    "submit": "Submit",
+    "back": "Back",
+    "loading": "Loading...",
+    "switching": "Switching language...",
+    "success": "Success",
+    "error": "Error",
+    "tips": "Tips",
+    "warning": "Warning"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "settings": "Settings"
+  },
+  "message": {
+    "title": "Welcome"
+  }
+}

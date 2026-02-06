@@ -14,6 +14,8 @@ const CanvasFilter = () => import('../views/canvas_filter.vue')
 const CanvasAnimation = () => import('../views/canvas.animation.vue')
 const Schema = () => import('../views/schema.vue')
 const Gmap = () => import('../views/gmap.vue')
+const Language = () => import('../views/language.vue')
+const Echarts = () => import('../views/echarts.vue')
 
 const router = createRouter({
   history: createWebHistory(),
@@ -21,6 +23,14 @@ const router = createRouter({
     {
       path: '/',
       redirect: '/test'
+    },
+    {
+      path: '/echarts',
+      component: Echarts
+    },
+    {
+      path: '/language',
+      component: Language
     },
     {
       path: '/gmap',

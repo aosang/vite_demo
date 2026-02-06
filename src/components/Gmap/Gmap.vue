@@ -105,6 +105,7 @@ const animate = (timestamp) => {
 
   if (currentIndex.value >= props.trackData.length - 1) {
     console.log('动画完成')
+    progress.value = 100  // 确保进度条达到 100%
     isPlaying.value = false
     return
   }
@@ -139,8 +140,9 @@ const animate = (timestamp) => {
     marker.setAngle(angle)
   }
 
-  // 更新总体进度
-  progress.value = ((currentIndex.value + interpolationProgress) / props.trackData.length) * 100
+  // 更新总体进度（基于段数而非点数）
+  const totalSegments = props.trackData.length - 1  // 总段数 = 点数 - 1
+  progress.value = ((currentIndex.value + interpolationProgress) / totalSegments) * 100
 
   // 如果当前段完成，移动到下一段
   if (segmentProgress >= 1) {
