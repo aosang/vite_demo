@@ -1,8 +1,6 @@
 <!-- views/VirtualListExample.vue -->
 <template>
   <div class="page">
-    <h1>虚拟滚动示例</h1>
-
     <div class="tabs">
       <button 
         v-for="tab in tabs" 
@@ -15,10 +13,7 @@
     </div>
 
     <!-- 基础虚拟列表 -->
-    <div v-show="activeTab === 'basic'" class="demo-section">
-      <h2>1. 基础虚拟列表（修复版）</h2>
-      <p class="desc">支持 1000+ 条数据，动态高度，无重叠问题</p>
-      
+    <div v-show="activeTab === 'basic'" class="demo-section">   
       <VirtualList
         :items="basicItems"
         :height="600"
@@ -40,8 +35,6 @@
 
     <!-- 无限加载虚拟列表 -->
     <div v-show="activeTab === 'infinite-list'" class="demo-section">
-      <h2>2. 无限加载虚拟列表</h2>
-      <p class="desc">滚动到底部自动加载更多数据</p>
       <div class="controls">
         <button @click="resetInfiniteList">重置</button>
         <span>当前数据: {{ infiniteItems.length }} 条</span>
@@ -72,8 +65,6 @@
 
     <!-- 无限加载虚拟表格 -->
     <div v-show="activeTab === 'infinite-table'" class="demo-section">
-      <h2>3. 无限加载虚拟表格</h2>
-      <p class="desc">表格形式展示，支持无限加载</p>
       <div class="controls">
         <button @click="resetInfiniteTable">重置</button>
         <span>当前数据: {{ tableData.length }} 条</span>

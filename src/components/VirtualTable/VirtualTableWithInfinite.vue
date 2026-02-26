@@ -1,74 +1,71 @@
-<!-- 虚拟表格 -->
+<!-- 虚拟表格（单表 + sticky 表头 + 占位行方案） -->
 <template>
-  <div class="virtual-table-infinite" :style="{ height: `${height}px` }">
-    <!-- 表头 -->
-    <div
-      class="virtual-table-header"
-      :style="{ transform: `translateX(-${scrollLeft}px)` }"
-    >
-      <table>
-        <thead>
-          <tr>
-            <th
-              v-for="col in visibleColumns"
-              :key="col.key"
-              :style="{ width: col.width ? `${col.width}px` : 'auto', minWidth: col.minWidth ? `${col.minWidth}px` : 'auto' }"
+  <div
+    ref="containerRef"
+    class="virtual-table-infinite"
+    :style="{ height: `${height}px` }"
+    @scroll="handleScroll"
+  >
+    <table>
+      <!-- colgroup 统一控制列宽，表头与表体自动对齐 -->
+      <colgroup>
+        <col
+          v-for="col in columns"
+          :key="col.key"
+          :style="getColStyle(col)"
+        />
+      </colgroup>
+
+      <!-- 表头：sticky 固定，随水平滚动但不随垂直滚动 -->
+      <thead>
+        <tr>
+          <th v-for="col in columns" :key="col.key">
+            {{ col.title }}
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- 顶部占位行，撑开上方不可见区域 -->
+        <tr v-if="topSpacerHeight > 0" class="spacer-row">
+          <td :colspan="columns.length" :style="{ height: `${topSpacerHeight}px` }"></td>
+        </tr>
+
+        <!-- 可见行 -->
+        <tr
+          v-for="row in visibleRows"
+          :key="getRowKey(row)"
+          class="data-row"
+        >
+          <td v-for="col in columns" :key="col.key">
+            <slot
+              :name="`cell-${col.key}`"
+              :row="row.data"
+              :column="col"
+              :index="row.index"
+              :value="row.data[col.dataIndex]"
             >
-              {{ col.title }}
-            </th>
-          </tr>
-        </thead>
-      </table>
+              {{ row.data[col.dataIndex] }}
+            </slot>
+          </td>
+        </tr>
+
+        <!-- 底部占位行，撑开下方不可见区域 -->
+        <tr v-if="bottomSpacerHeight > 0" class="spacer-row">
+          <td :colspan="columns.length" :style="{ height: `${bottomSpacerHeight}px` }"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 加载中 -->
+    <div v-if="loading" class="loading-indicator">
+      <div class="spinner"></div>
+      <span>加载中...</span>
     </div>
 
-    <!-- 表体 -->
-    <div
-      ref="bodyRef"
-      class="virtual-table-body"
-      @scroll="handleScroll"
-    >
-      <div :style="{ height: `${totalHeight}px`, position: 'relative' }">
-        <table>
-          <tbody>
-            <tr
-              v-for="row in visibleRows"
-              :key="getRowKey(row)"
-              :style="{
-                position: 'absolute',
-                top: `${getRowOffset(row.index)}px`,
-                width: '100%',
-              }"
-            >
-              <td
-                v-for="col in visibleColumns"
-                :key="col.key"
-                :style="{ width: col.width ? `${col.width}px` : 'auto', minWidth: col.minWidth ? `${col.minWidth}px` : 'auto' }"
-              >
-                <slot
-                  :name="`cell-${col.key}`"
-                  :row="row.data"
-                  :column="col"
-                  :index="row.index"
-                  :value="row.data[col.dataIndex]"
-                >
-                  {{ row.data[col.dataIndex] }}
-                </slot>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- 加载中 -->
-      <div v-if="loading" class="loading-indicator">
-        <div class="spinner"></div>
-        <span>加载中...</span>
-      </div>
-
-      <!-- 已加载全部 -->
-      <div v-else-if="!hasMore && data.length > 0" class="end-indicator">
-        没有更多了
-      </div>
+    <!-- 已加载全部 -->
+    <div v-else-if="!hasMore && data.length > 0" class="end-indicator">
+      没有更多了
     </div>
   </div>
 </template>
@@ -97,22 +94,18 @@ const props = defineProps({
     type: [String, Function],
     default: 'id',
   },
-  // 加载更多函数
   loadMore: {
     type: Function,
     default: null,
   },
-  // 是否有更多数据
   hasMore: {
     type: Boolean,
     default: false,
   },
-  // 距离底部多远触发加载 (px)
   threshold: {
     type: Number,
     default: 200,
   },
-  // 缓冲区行数
   overscan: {
     type: Number,
     default: 5,
@@ -121,94 +114,73 @@ const props = defineProps({
 
 const emit = defineEmits(['update:loading'])
 
-const bodyRef = ref()
+const containerRef = ref()
 const scrollTop = ref(0)
-const scrollLeft = ref(0)
 const loading = ref(false)
 
-// 获取行的 key
 function getRowKey(row) {
   if (typeof props.rowKey === 'function') {
     return props.rowKey(row.data)
   }
-  return row.data[props.rowKey] || row.index
+  return row.data[props.rowKey] ?? row.index
+}
+
+// col 的宽度样式，作用于 <col>，表头与表体自动共享
+function getColStyle(col) {
+  if (col.width) return { width: `${col.width}px` }
+  if (col.minWidth) return { minWidth: `${col.minWidth}px` }
+  return {}
 }
 
 // 可见行范围
 const visibleRowRange = computed(() => {
   const start = Math.floor(scrollTop.value / props.rowHeight)
   const end = Math.ceil((scrollTop.value + props.height) / props.rowHeight)
-
   return {
     start: Math.max(0, start - props.overscan),
     end: Math.min(props.data.length - 1, end + props.overscan),
   }
 })
 
-// 可见行
+// 可见行数据
 const visibleRows = computed(() => {
   const result = []
   for (let i = visibleRowRange.value.start; i <= visibleRowRange.value.end; i++) {
-    result.push({
-      index: i,
-      data: props.data[i],
-    })
+    result.push({ index: i, data: props.data[i] })
   }
   return result
 })
 
-// 可见列
-const visibleColumns = computed(() => props.columns)
+// 顶部占位高度
+const topSpacerHeight = computed(() => visibleRowRange.value.start * props.rowHeight)
 
-// 总高度
-const totalHeight = computed(() => {
-  return props.data.length * props.rowHeight
+// 底部占位高度
+const bottomSpacerHeight = computed(() => {
+  const remaining = props.data.length - 1 - visibleRowRange.value.end
+  return Math.max(0, remaining * props.rowHeight)
 })
 
-// 获取行偏移
-function getRowOffset(index) {
-  return index * props.rowHeight
-}
-
-// 处理滚动
 let rafId = null
 function handleScroll(e) {
-  if (rafId) {
-    cancelAnimationFrame(rafId)
-  }
-
+  if (rafId) cancelAnimationFrame(rafId)
   rafId = requestAnimationFrame(() => {
     scrollTop.value = e.target.scrollTop
-    scrollLeft.value = e.target.scrollLeft
-
-    // 检查是否需要加载更多
     checkLoadMore(e.target)
   })
 }
 
-// 检查是否需要加载更多
 function checkLoadMore(container) {
   if (!props.loadMore || loading.value || !props.hasMore) return
-
-  const scrollHeight = container.scrollHeight
-  const scrollTop = container.scrollTop
-  const clientHeight = container.clientHeight
-
-  // 距离底部的距离
-  const distanceToBottom = scrollHeight - scrollTop - clientHeight
-
+  const distanceToBottom = container.scrollHeight - container.scrollTop - container.clientHeight
   if (distanceToBottom < props.threshold) {
     loadMoreData()
   }
 }
 
-// 加载更多数据
 async function loadMoreData() {
   if (loading.value || !props.hasMore) return
-
   loading.value = true
-  emit('update:loading', false)
-
+  emit('update:loading', true)
   try {
     await props.loadMore()
   } catch (error) {
@@ -219,63 +191,67 @@ async function loadMoreData() {
   }
 }
 
-// 暴露方法
 defineExpose({
   scrollToIndex: (index) => {
-    const offset = getRowOffset(index)
-    bodyRef.value.scrollTop = offset
+    if (containerRef.value) containerRef.value.scrollTop = index * props.rowHeight
   },
   scrollTo: (offset) => {
-    bodyRef.value.scrollTop = offset
+    if (containerRef.value) containerRef.value.scrollTop = offset
   },
   reset: () => {
     scrollTop.value = 0
-    if (bodyRef.value) {
-      bodyRef.value.scrollTop = 0
-    }
+    if (containerRef.value) containerRef.value.scrollTop = 0
   },
 })
 </script>
 
 <style scoped>
 .virtual-table-infinite {
-  overflow: hidden;
+  overflow: auto;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
-}
-
-.virtual-table-header {
-  overflow: hidden;
-  background: #fafafa;
-}
-
-.virtual-table-body {
-  height: calc(100% - 50px);
-  overflow: auto;
-  position: relative;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 th {
   padding: 12px 16px;
   text-align: left;
   font-weight: 600;
-  border-bottom: 2px solid #d9d9d9;
   background: #fafafa;
+  border-bottom: 2px solid #d9d9d9;
+  white-space: nowrap;
 }
 
 td {
   padding: 12px 16px;
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.data-row {
   border-bottom: 1px solid #f0f0f0;
 }
 
-tr:hover td {
+.data-row:hover {
   background: #f5f5f5;
+}
+
+.spacer-row td {
+  padding: 0;
+  border: none;
 }
 
 .loading-indicator,
