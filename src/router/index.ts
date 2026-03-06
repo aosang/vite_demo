@@ -16,13 +16,18 @@ const Schema = () => import('../views/schema.vue')
 const Gmap = () => import('../views/gmap.vue')
 const Language = () => import('../views/language.vue')
 const Echarts = () => import('../views/echarts.vue')
+const Test2 = () => import('../views/test2.vue')
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
-      redirect: '/test'
+      redirect: '/test2'
+    },
+    {
+      path: '/test2',
+      component: Test2
     },
     {
       path: '/echarts',

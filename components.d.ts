@@ -32,6 +32,7 @@ declare module 'vue' {
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     BaseChart: typeof import('./src/components/BaseChart/BaseChart.vue')['default']
+    Button: typeof import('./src/components/Button/Button.vue')['default']
     CanvasFilter: typeof import('./src/components/CanvasFilter/CanvasFilter.vue')['default']
     ColumnSetting: typeof import('./src/components/ProTable/ColumnSetting.vue')['default']
     Contact: typeof import('./src/components/shawllowRef/contact.vue')['default']
