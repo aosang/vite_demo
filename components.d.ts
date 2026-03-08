@@ -55,6 +55,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     Schema: typeof import('./src/components/Schema/Schema.vue')['default']
     ThemeSelector: typeof import('./src/components/BaseChart/ThemeSelector.vue')['default']
+    Todo: typeof import('./src/components/Todo/Todo.vue')['default']
     VirtualList: typeof import('./src/components/VirtualTable/VirtualList.vue')['default']
     VirtualListWithInfinite: typeof import('./src/components/VirtualTable/VirtualListWithInfinite.vue')['default']
     VirtualTable: typeof import('./src/components/VirtualTable/VirtualTable.vue')['default']
